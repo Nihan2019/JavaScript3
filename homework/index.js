@@ -39,23 +39,27 @@ rightContainer.appendChild(contributorHeader);
 rightContainer.appendChild(contributorList);
 
 
-const contributorUrl = "https://api.github.com/repos/HackYourFuture/AngularJS/contributors";
-fetch(contributorUrl)
-  .then(response => response.json())
-  .then(data => {
-    contributorList.innerHTML = data.map(
-      (item, i) =>
-        `<li class="contributor-item" aria-label=${item.login} tabindex="${i}">
+function getContr(contributorUrl) {
+
+  //const contributorUrl = "https://api.github.com/repos/HackYourFuture/AngularJS/contributors";
+  fetch(contributorUrl)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      contributorList.innerHTML = data.map(
+        (item, i) =>
+          `<li class="contributor-item" aria-label=${item.login} tabindex="${i}">
   <img src="${item.avatar_url}" height="48" class="contributor-avatar">
   <div class="contributor-data">
     <a href="https://github.com/${item.login}" target="_blank">${item.login}</a>
     <span class="contributor-badge">${item.contributions}</span>
   </div>
   </li>`)
-      .join("");
+        .join("");
 
-  })
-  .catch(error => console.log("ERROR: " + error));
+    })
+    .catch(error => console.log("ERROR: " + error));
+}
 
 const url = "https://api.github.com/orgs/HackYourFuture/repos?per_page=100";
 fetch(url)
@@ -78,7 +82,8 @@ fetch(url)
       descriptionData.innerHTML = 'Description : ' + data[i].description;
       forksData.innerHTML = "Forks : " + data[i].forks;
       updatedData.innerHTML = "Updated : " + data[i].updated_at;
-
+      
+      getContr(data[i].contributors_url);
     });
 
   })
